@@ -1,0 +1,11 @@
+{
+  "appId": "app.finbalansika.finance",
+  "appName": "ФинБалансика",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
