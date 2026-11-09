@@ -3,276 +3,759 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f5f7">
+  <meta name="theme-color" content="#0a0a0b">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="description" content="ФинБалансика — учёт доходов, расходов и целей">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="ФинБалансика — умный учёт финансов">
   <title>ФинБалансика</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="assets/icons/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
     :root {
-      --bg-app: #f4f5f7;
+      --bg: #0a0a0b;
+      --bg-elevated: #141416;
+      --bg-card: #1a1a1e;
+      --bg-soft: #222228;
+      --bg-hover: #2a2a32;
+      --text: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.15);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.15);
+      --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.15);
+      --purple: #a855f7;
+      --border: rgba(255,255,255,0.06);
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --radius-xs: 10px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-t: env(safe-area-inset-top, 0px);
+      --nav-h: 72px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+
+    body.light {
+      --bg: #f4f4f5;
+      --bg-elevated: #ffffff;
       --bg-card: #ffffff;
-      --bg-element: #eef0f4;
-      --text-main: #111111;
-      --text-muted: #8e8e93;
-      --btn-bg: #1c1c1e;
-      --btn-text: #ffffff;
-      --accent-green: #10b981;
-      --accent-green-bg: #dcfce7;
-      --accent-red: #ef4444;
-      --accent-red-bg: #fee2e2;
-      --accent-blue: #3b82f6;
-      --accent-blue-bg: #e0e7ff;
-      --accent-purple: #8b5cf6;
-      --accent-purple-bg: #ede9fe;
-      --border-color: rgba(0,0,0,0.05);
-      --shadow: 0 8px 24px rgba(0,0,0,0.04);
-      --shadow-hover: 0 12px 32px rgba(0,0,0,0.08);
-      --radius-xl: 32px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --smooth: cubic-bezier(0.16, 1, 0.3, 1);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-top: env(safe-area-inset-top, 0px);
+      --bg-soft: #f0f0f2;
+      --bg-hover: #e8e8ec;
+      --text: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --border: rgba(0,0,0,0.06);
+      --shadow: 0 4px 24px rgba(0,0,0,0.06);
+      --accent-soft: rgba(34, 197, 94, 0.12);
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --blue-soft: rgba(59, 130, 246, 0.12);
     }
 
-    body.dark-theme {
-      --bg-app: #000000;
-      --bg-card: #1c1c1e;
-      --bg-element: #2c2c2e;
-      --text-main: #ffffff;
-      --text-muted: #8e8e93;
-      --btn-bg: #ffffff;
-      --btn-text: #000000;
-      --accent-green-bg: rgba(16, 185, 129, 0.2);
-      --accent-red-bg: rgba(239, 68, 68, 0.2);
-      --accent-blue-bg: rgba(59, 130, 246, 0.2);
-      --accent-purple-bg: rgba(139, 92, 246, 0.2);
-      --border-color: rgba(255,255,255,0.1);
-      --shadow: 0 8px 24px rgba(0,0,0,0.2);
-      --shadow-hover: 0 12px 32px rgba(0,0,0,0.3);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; overflow-x: hidden; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg-app);
-      color: var(--text-main);
-      line-height: 1.4;
-      padding-bottom: calc(80px + var(--safe-bottom));
-      transition: background 0.3s, color 0.3s;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      padding-bottom: calc(var(--nav-h) + var(--safe-b));
+      transition: background 0.35s var(--ease), color 0.35s var(--ease);
     }
-    .app { max-width: 480px; margin: 0 auto; min-height: 100%; position: relative; }
-    .screen { display: none; padding: 16px; padding-top: calc(16px + var(--safe-top)); animation: fadeIn 0.25s var(--smooth); }
+
+    button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+    input, select, textarea { font-family: inherit; color: inherit; }
+
+    .app { max-width: 430px; margin: 0 auto; min-height: 100%; position: relative; }
+
+    .screen {
+      display: none;
+      padding: 16px 16px 24px;
+      padding-top: calc(12px + var(--safe-t));
+      animation: screenIn 0.4s var(--ease) both;
+    }
     .screen.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-    /* Header */
-    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+    @keyframes screenIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
     .header-actions { display: flex; gap: 8px; }
+
     .icon-btn {
-      width: 40px; height: 40px; border-radius: 12px; border: none;
-      background: var(--bg-element); color: var(--text-main);
-      display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--bg-soft);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s var(--spring), background 0.2s;
     }
+    .icon-btn:active { transform: scale(0.88); }
+    .icon-btn svg { width: 18px; height: 18px; opacity: 0.85; }
 
-    /* Balance card */
     .balance-card {
-      background: var(--bg-card); border-radius: var(--radius-xl); padding: 24px;
-      box-shadow: var(--shadow); margin-bottom: 16px; position: relative; overflow: hidden;
+      background: linear-gradient(145deg, #1c1c22 0%, #141418 100%);
+      border-radius: 24px;
+      padding: 24px 22px 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
     }
-    .balance-label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
-    .balance-value { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
-    .balance-row { display: flex; gap: 12px; margin-top: 20px; }
-    .balance-item { flex: 1; background: var(--bg-element); border-radius: var(--radius-md); padding: 12px; }
-    .balance-item .label { font-size: 12px; color: var(--text-muted); }
-    .balance-item .value { font-size: 16px; font-weight: 700; margin-top: 2px; }
-    .balance-item.income .value { color: var(--accent-green); }
-    .balance-item.expense .value { color: var(--accent-red); }
+    body.light .balance-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8f8fa 100%);
+    }
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -40%; right: -20%;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .balance-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+    .balance-value {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      transition: opacity 0.25s;
+    }
+    .balance-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+    }
+    body.light .stat-pill { background: var(--bg-soft); }
+    .stat-pill .label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+    .stat-pill .value {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .stat-pill.income .value { color: var(--accent); }
+    .stat-pill.expense .value { color: var(--danger); }
 
-    /* Quick actions */
-    .quick-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+    .quick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
     .qa-btn {
-      flex: 1; padding: 14px; border: none; border-radius: var(--radius-md);
-      font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.2s var(--spring), box-shadow 0.2s, background 0.2s;
     }
-    .qa-income { background: var(--accent-green-bg); color: var(--accent-green); }
-    .qa-expense { background: var(--accent-red-bg); color: var(--accent-red); }
+    .qa-btn:active { transform: scale(0.96); }
+    .qa-income {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .qa-expense {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+    .qa-btn svg { width: 18px; height: 18px; }
 
-    /* Section */
-    .section-title { font-size: 15px; font-weight: 700; margin: 20px 0 12px; display: flex; justify-content: space-between; align-items: center; }
-    .section-title a, .section-title button { font-size: 13px; color: var(--accent-blue); background: none; border: none; cursor: pointer; font-weight: 600; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-head h2 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
 
-    /* Transaction list */
     .tx-list { display: flex; flex-direction: column; gap: 8px; }
     .tx-item {
-      background: var(--bg-card); border-radius: var(--radius-md); padding: 14px 16px;
-      display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s var(--spring), background 0.2s;
+      animation: itemIn 0.35s var(--ease) both;
     }
-    .tx-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--bg-element); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .tx-item:active { transform: scale(0.98); background: var(--bg-hover); }
+    @keyframes itemIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+    .tx-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .tx-icon svg { width: 20px; height: 20px; }
     .tx-info { flex: 1; min-width: 0; }
-    .tx-info .name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .tx-info .meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .tx-amount { font-weight: 700; font-size: 15px; white-space: nowrap; }
-    .tx-amount.income { color: var(--accent-green); }
-    .tx-amount.expense { color: var(--accent-red); }
-
-    /* Bottom nav */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto;
-      background: var(--bg-card); border-top: 1px solid var(--border-color);
-      display: flex; padding: 8px 0 calc(8px + var(--safe-bottom));
-      z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+    .tx-info .name {
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-      background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 500; cursor: pointer; padding: 6px;
+    .tx-info .meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
-    .nav-item.active { color: var(--text-main); }
-    .nav-item .icon { font-size: 22px; }
-
-    /* Buttons */
-    .btn-primary {
-      background: var(--btn-bg); color: var(--btn-text); border: none; border-radius: var(--radius-md);
-      padding: 14px 20px; font-weight: 600; font-size: 15px; width: 100%; cursor: pointer;
-    }
-    .btn-secondary {
-      background: var(--bg-element); color: var(--text-main); border: none; border-radius: var(--radius-md);
-      padding: 14px 20px; font-weight: 600; font-size: 15px; width: 100%; cursor: pointer;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200;
-      display: none; align-items: flex-end; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--bg-card); border-radius: 24px 24px 0 0; width: 100%; max-width: 480px;
-      padding: 24px; padding-bottom: calc(24px + var(--safe-bottom)); max-height: 90vh; overflow-y: auto;
-      animation: slideUp 0.3s var(--smooth);
-    }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-header h2 { font-size: 18px; font-weight: 700; }
-    .modal-close { background: var(--bg-element); border: none; width: 32px; height: 32px; border-radius: 10px; font-size: 18px; cursor: pointer; color: var(--text-main); }
-
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border-color);
-      background: var(--bg-element); color: var(--text-main); font-size: 15px; font-family: inherit;
-    }
-    .form-group textarea { resize: vertical; min-height: 60px; }
-    .type-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-    .type-tab {
-      flex: 1; padding: 10px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
-      background: var(--bg-element); color: var(--text-muted);
-    }
-    .type-tab.active { background: var(--btn-bg); color: var(--btn-text); }
-
-    /* Analytics */
-    .period-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
-    .period-tab {
-      padding: 8px 14px; border-radius: 20px; border: none; font-size: 13px; font-weight: 600;
-      background: var(--bg-element); color: var(--text-muted); cursor: pointer;
-    }
-    .period-tab.active { background: var(--btn-bg); color: var(--btn-text); }
-    .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 120px; margin: 16px 0; }
-    .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
-    .chart-bar { width: 100%; border-radius: 6px 6px 0 0; background: var(--accent-blue); min-height: 4px; transition: height 0.3s; }
-    .chart-bar-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
-    .cat-list { display: flex; flex-direction: column; gap: 8px; }
-    .cat-item { display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 12px; border-radius: 12px; }
-    .cat-bar { flex: 1; height: 6px; background: var(--bg-element); border-radius: 3px; overflow: hidden; }
-    .cat-bar-fill { height: 100%; border-radius: 3px; }
-
-    /* Goals */
-    .goal-card {
-      background: var(--bg-card); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow);
-    }
-    .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .goal-title { font-weight: 700; font-size: 16px; }
-    .goal-progress { height: 8px; background: var(--bg-element); border-radius: 4px; overflow: hidden; margin: 8px 0; }
-    .goal-progress-fill { height: 100%; background: var(--accent-green); border-radius: 4px; transition: width 0.3s; }
-    .goal-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
-
-    /* Toast */
-    .toast {
-      position: fixed; bottom: calc(90px + var(--safe-bottom)); left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--btn-bg); color: var(--btn-text); padding: 12px 20px; border-radius: 12px;
-      font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 300; pointer-events: none;
+    .tx-amount {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
       white-space: nowrap;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .tx-amount.income { color: var(--accent); }
+    .tx-amount.expense { color: var(--danger); }
 
-    /* Settings */
-    .settings-item {
-      display: flex; align-items: center; justify-content: space-between;
-      background: var(--bg-card); padding: 16px; border-radius: 14px; margin-bottom: 8px;
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      max-width: 430px;
+      margin: 0 auto;
+      height: calc(var(--nav-h) + var(--safe-b));
+      padding-bottom: var(--safe-b);
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
-    .settings-item label { font-weight: 600; }
-    .switch {
-      width: 48px; height: 28px; background: var(--bg-element); border-radius: 14px; position: relative; cursor: pointer;
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: color 0.25s;
+      position: relative;
     }
-    .switch.on { background: var(--accent-green); }
-    .switch::after {
-      content: ''; position: absolute; width: 24px; height: 24px; background: #fff; border-radius: 50%;
-      top: 2px; left: 2px; transition: transform 0.2s;
+    .nav-item svg {
+      width: 22px; height: 22px;
+      transition: transform 0.25s var(--spring);
     }
-    .switch.on::after { transform: translateX(20px); }
+    .nav-item.active { color: var(--text); }
+    .nav-item.active svg { transform: scale(1.08); }
+    .nav-item .indicator {
+      position: absolute;
+      top: 6px;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s var(--spring);
+    }
+    .nav-item.active .indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
 
-    .empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-    .empty .emoji { font-size: 40px; margin-bottom: 12px; }
+    .period-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      background: var(--bg-soft);
+      padding: 4px;
+      border-radius: 14px;
+    }
+    .period-tab {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.25s var(--ease);
+    }
+    .period-tab.active {
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .an-total {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      margin-bottom: 4px;
+    }
+    .an-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 110px;
+      margin-bottom: 24px;
+      padding: 0 4px;
+    }
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar {
+      width: 100%;
+      max-width: 28px;
+      border-radius: 6px 6px 3px 3px;
+      background: linear-gradient(180deg, var(--blue) 0%, rgba(59,130,246,0.4) 100%);
+      min-height: 4px;
+      transition: height 0.5s var(--ease);
+      animation: barGrow 0.6s var(--ease) both;
+    }
+    @keyframes barGrow {
+      from { height: 0 !important; }
+    }
+    .bar-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .cat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      animation: itemIn 0.35s var(--ease) both;
+    }
+    .cat-row:last-child { border-bottom: none; }
+    .cat-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .cat-icon svg { width: 16px; height: 16px; }
+    .cat-info { flex: 1; min-width: 0; }
+    .cat-info .top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .cat-bar-bg {
+      height: 5px;
+      background: var(--bg-soft);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .cat-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s var(--ease);
+    }
+
+    .goal-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s var(--spring);
+      animation: itemIn 0.35s var(--ease) both;
+    }
+    .goal-card:active { transform: scale(0.98); }
+    .goal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .goal-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .goal-icon-wrap {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--blue-soft);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .goal-icon-wrap svg { width: 18px; height: 18px; color: var(--blue); }
+    .goal-pct {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .goal-progress {
+      height: 8px;
+      background: var(--bg-soft);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .goal-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), #4ade80);
+      transition: width 0.7s var(--ease);
+    }
+    .goal-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .settings-group {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row:active { background: var(--bg-hover); }
+    .settings-row .left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .settings-row .left svg { width: 20px; height: 20px; opacity: 0.7; }
+
+    .toggle {
+      width: 48px; height: 28px;
+      border-radius: 14px;
+      background: var(--bg-soft);
+      position: relative;
+      transition: background 0.25s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--accent); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      top: 3px; left: 3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.25s var(--spring);
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    .btn-block {
+      width: 100%;
+      padding: 15px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      transition: transform 0.2s var(--spring), opacity 0.2s;
+      margin-bottom: 10px;
+    }
+    .btn-block:active { transform: scale(0.97); }
+    .btn-secondary {
+      background: var(--bg-soft);
+      color: var(--text);
+    }
+    .btn-danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      background: var(--bg-elevated);
+      border-radius: 24px 24px 0 0;
+      padding: 12px 20px calc(24px + var(--safe-b));
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.4s var(--ease);
+      border: 1px solid var(--border);
+      border-bottom: none;
+    }
+    .overlay.open .modal { transform: translateY(0); }
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--text-muted);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+      opacity: 0.4;
+    }
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .modal-head h3 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: var(--bg-soft);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s;
+    }
+    .modal-close:active { transform: scale(0.9); }
+    .modal-close svg { width: 16px; height: 16px; }
+
+    .type-switch {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      background: var(--bg-soft);
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .type-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.25s;
+    }
+    .type-btn.active {
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-soft);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      transition: transform 0.2s var(--spring), opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+    body.light .btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+    .empty-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: var(--bg-soft);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .empty-icon svg { width: 24px; height: 24px; opacity: 0.5; }
+    .empty p { font-size: 14px; font-weight: 500; }
+
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav-h) + var(--safe-b) + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: var(--bg);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s var(--ease);
+      z-index: 400;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    body.light .toast {
+      background: #18181b;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- HOME -->
     <div id="screen-home" class="screen active">
       <div class="header">
         <h1>ФинБалансика</h1>
         <div class="header-actions">
-          <button class="icon-btn" id="privacyBtn" title="Приватность">👁</button>
-          <button class="icon-btn" id="themeBtn" title="Тема">🌙</button>
+          <button class="icon-btn" id="privacyBtn" title="Приватность" aria-label="Приватность">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="icon-btn" id="themeBtn" title="Тема" aria-label="Тема">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
         </div>
       </div>
 
       <div class="balance-card">
-        <div class="balance-label">Баланс</div>
+        <div class="balance-label">Баланс за месяц</div>
         <div class="balance-value" id="balanceValue">0 ₽</div>
         <div class="balance-row">
-          <div class="balance-item income">
+          <div class="stat-pill income">
             <div class="label">Доходы</div>
             <div class="value" id="incomeValue">0 ₽</div>
           </div>
-          <div class="balance-item expense">
+          <div class="stat-pill expense">
             <div class="label">Расходы</div>
             <div class="value" id="expenseValue">0 ₽</div>
           </div>
         </div>
       </div>
 
-      <div class="quick-actions">
-        <button class="qa-btn qa-income" id="quickIncome">+ Доход</button>
-        <button class="qa-btn qa-expense" id="quickExpense">− Расход</button>
+      <div class="quick-row">
+        <button class="qa-btn qa-income" id="quickIncome">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Доход
+        </button>
+        <button class="qa-btn qa-expense" id="quickExpense">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+          Расход
+        </button>
       </div>
 
-      <div class="section-title">
-        <span>Последние операции</span>
-        <button id="seeAllTx">Все</button>
+      <div class="section-head">
+        <h2>Последние операции</h2>
       </div>
       <div class="tx-list" id="txList"></div>
     </div>
 
-    <!-- ANALYTICS -->
     <div id="screen-analytics" class="screen">
       <div class="header">
         <h1>Аналитика</h1>
@@ -282,76 +765,97 @@
         <button class="period-tab" data-period="month">Месяц</button>
         <button class="period-tab" data-period="year">Год</button>
       </div>
-      <div class="balance-card">
-        <div class="balance-label">Расходы за период</div>
-        <div class="balance-value" id="anExpenseTotal">0 ₽</div>
-      </div>
+      <div class="an-total" id="anExpenseTotal">0 ₽</div>
+      <div class="an-sub">Расходы за период</div>
       <div class="chart-bars" id="chartBars"></div>
-      <div class="section-title">По категориям</div>
-      <div class="cat-list" id="catList"></div>
+      <div class="section-head"><h2>По категориям</h2></div>
+      <div id="catList"></div>
     </div>
 
-    <!-- GOALS -->
     <div id="screen-goals" class="screen">
       <div class="header">
         <h1>Цели</h1>
-        <button class="icon-btn" id="addGoalBtn">+</button>
+        <button class="icon-btn" id="addGoalBtn" aria-label="Добавить цель">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
       </div>
       <div id="goalsList"></div>
     </div>
 
-    <!-- SETTINGS -->
     <div id="screen-settings" class="screen">
       <div class="header">
         <h1>Настройки</h1>
       </div>
-      <div class="settings-item">
-        <label>Тёмная тема</label>
-        <div class="switch" id="themeSwitch"></div>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            Тёмная тема
+          </div>
+          <div class="toggle on" id="themeToggle"></div>
+        </div>
+        <div class="settings-row">
+          <div class="left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Скрыть суммы
+          </div>
+          <div class="toggle" id="privacyToggle"></div>
+        </div>
       </div>
-      <div class="settings-item">
-        <label>Режим приватности</label>
-        <div class="switch" id="privacySwitch"></div>
-      </div>
-      <div style="margin-top: 24px;">
-        <button class="btn-secondary" id="exportBtn" style="margin-bottom: 10px;">Экспорт данных</button>
-        <button class="btn-secondary" id="clearDataBtn" style="color: var(--accent-red);">Очистить все данные</button>
-      </div>
+      <button class="btn-block btn-secondary" id="exportBtn">Экспорт данных</button>
+      <button class="btn-block btn-danger" id="clearDataBtn">Очистить все данные</button>
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
-    <button class="nav-item active" data-screen="home"><span class="icon">🏠</span>Главная</button>
-    <button class="nav-item" data-screen="analytics"><span class="icon">📊</span>Аналитика</button>
-    <button class="nav-item" data-screen="goals"><span class="icon">🎯</span>Цели</button>
-    <button class="nav-item" data-screen="settings"><span class="icon">⚙️</span>Ещё</button>
+    <button class="nav-item active" data-screen="home">
+      <span class="indicator"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Главная
+    </button>
+    <button class="nav-item" data-screen="analytics">
+      <span class="indicator"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Аналитика
+    </button>
+    <button class="nav-item" data-screen="goals">
+      <span class="indicator"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      Цели
+    </button>
+    <button class="nav-item" data-screen="settings">
+      <span class="indicator"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Ещё
+    </button>
   </nav>
 
-  <!-- Transaction Modal -->
-  <div class="modal-overlay" id="txModal">
+  <div class="overlay" id="txModal">
     <div class="modal">
-      <div class="modal-header">
-        <h2 id="txModalTitle">Новая операция</h2>
-        <button class="modal-close" id="txModalClose">×</button>
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3 id="txModalTitle">Новая операция</h3>
+        <button class="modal-close" id="txModalClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
-      <div class="type-tabs">
-        <button class="type-tab active" data-type="expense">Расход</button>
-        <button class="type-tab" data-type="income">Доход</button>
+      <div class="type-switch">
+        <button class="type-btn active" data-type="expense">Расход</button>
+        <button class="type-btn" data-type="income">Доход</button>
       </div>
-      <div class="form-group">
+      <div class="field">
         <label>Сумма</label>
         <input type="number" id="txAmount" placeholder="0" inputmode="decimal">
       </div>
-      <div class="form-group">
+      <div class="field">
         <label>Категория</label>
         <select id="txCategory"></select>
       </div>
-      <div class="form-group">
+      <div class="field">
         <label>Заметка</label>
         <input type="text" id="txNote" placeholder="Необязательно">
       </div>
-      <div class="form-group">
+      <div class="field">
         <label>Дата</label>
         <input type="date" id="txDate">
       </div>
@@ -359,28 +863,26 @@
     </div>
   </div>
 
-  <!-- Goal Modal -->
-  <div class="modal-overlay" id="goalModal">
+  <div class="overlay" id="goalModal">
     <div class="modal">
-      <div class="modal-header">
-        <h2 id="goalModalTitle">Новая цель</h2>
-        <button class="modal-close" id="goalModalClose">×</button>
+      <div class="modal-handle"></div>
+      <div class="modal-head">
+        <h3 id="goalModalTitle">Новая цель</h3>
+        <button class="modal-close" id="goalModalClose">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
-      <div class="form-group">
+      <div class="field">
         <label>Название</label>
         <input type="text" id="goalTitle" placeholder="Например: Отпуск">
       </div>
-      <div class="form-group">
-        <label>Цель (₽)</label>
+      <div class="field">
+        <label>Цель, ₽</label>
         <input type="number" id="goalTarget" placeholder="100000">
       </div>
-      <div class="form-group">
-        <label>Уже накоплено (₽)</label>
-        <input type="number" id="goalCurrent" placeholder="0">
-      </div>
-      <div class="form-group">
-        <label>Иконка</label>
-        <input type="text" id="goalIcon" placeholder="✈️" maxlength="2">
+      <div class="field">
+        <label>Уже накоплено, ₽</label>
+        <input type="number" id="goalCurrent" placeholder="0" value="0">
       </div>
       <button class="btn-primary" id="goalSaveBtn">Сохранить</button>
     </div>
@@ -389,170 +891,190 @@
   <div class="toast" id="toast"></div>
 
   <script>
-  (function () {
+  (function(){
     'use strict';
-    const STORAGE_KEY = 'finbalansika_v1';
+    const STORAGE = 'finbalansika_v2';
     const CATS = {
       expense: [
-        { id: 'food', name: 'Еда', emoji: '🍔' },
-        { id: 'transport', name: 'Транспорт', emoji: '🚌' },
-        { id: 'home', name: 'Дом', emoji: '🏠' },
-        { id: 'shop', name: 'Покупки', emoji: '🛍️' },
-        { id: 'health', name: 'Здоровье', emoji: '💊' },
-        { id: 'fun', name: 'Развлечения', emoji: '🎬' },
-        { id: 'edu', name: 'Учёба', emoji: '📚' },
-        { id: 'other_e', name: 'Другое', emoji: '📦' },
+        {id:'food', name:'Еда', color:'#f97316'},
+        {id:'transport', name:'Транспорт', color:'#3b82f6'},
+        {id:'home', name:'Дом', color:'#8b5cf6'},
+        {id:'shop', name:'Покупки', color:'#ec4899'},
+        {id:'health', name:'Здоровье', color:'#10b981'},
+        {id:'fun', name:'Развлечения', color:'#eab308'},
+        {id:'edu', name:'Образование', color:'#06b6d4'},
+        {id:'other_e', name:'Другое', color:'#71717a'},
       ],
       income: [
-        { id: 'salary', name: 'Зарплата', emoji: '💼' },
-        { id: 'freelance', name: 'Фриланс', emoji: '💻' },
-        { id: 'gift', name: 'Подарок', emoji: '🎁' },
-        { id: 'invest', name: 'Инвестиции', emoji: '📈' },
-        { id: 'other_i', name: 'Другое', emoji: '💰' },
-      ],
+        {id:'salary', name:'Зарплата', color:'#22c55e'},
+        {id:'freelance', name:'Фриланс', color:'#3b82f6'},
+        {id:'gift', name:'Подарок', color:'#a855f7'},
+        {id:'invest', name:'Инвестиции', color:'#14b8a6'},
+        {id:'other_i', name:'Другое', color:'#71717a'},
+      ]
     };
-    const COLORS = ['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#84cc16'];
+
+    const ICONS = {
+      food: '<path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>',
+      transport: '<rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+      home: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+      shop: '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+      health: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+      fun: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',
+      edu: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+      other_e: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+      salary: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+      freelance: '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+      gift: '<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>',
+      invest: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+      other_i: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+      goal: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+      empty: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>'
+    };
+
+    function svgIcon(key, size) {
+      const d = ICONS[key] || ICONS.other_e;
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="${size||20}" height="${size||20}">${d}</svg>`;
+    }
 
     const state = {
       transactions: [],
       goals: [],
-      dark: false,
+      dark: true,
       privacy: false,
-      filter: 'all',
       period: 'month',
-      anType: 'expense',
-      editTxId: null,
-      editGoalId: null,
       txType: 'expense',
+      editTxId: null,
+      editGoalId: null
     };
 
     function load() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE);
         if (!raw) return;
-        const data = JSON.parse(raw);
-        state.transactions = Array.isArray(data.transactions) ? data.transactions : [];
-        state.goals = Array.isArray(data.goals) ? data.goals : [];
-        state.dark = !!data.dark;
-        state.privacy = !!data.privacy;
-      } catch (e) { console.warn(e); }
+        const d = JSON.parse(raw);
+        state.transactions = Array.isArray(d.transactions) ? d.transactions : [];
+        state.goals = Array.isArray(d.goals) ? d.goals : [];
+        state.dark = d.dark !== false;
+        state.privacy = !!d.privacy;
+      } catch(e) {}
     }
 
     function save() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        localStorage.setItem(STORAGE, JSON.stringify({
           transactions: state.transactions,
           goals: state.goals,
           dark: state.dark,
-          privacy: state.privacy,
+          privacy: state.privacy
         }));
-      } catch (e) { toast('Не удалось сохранить'); }
+      } catch(e) { toast('Ошибка сохранения'); }
     }
 
     function uid() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
     }
 
-    function formatMoney(n, hide) {
+    function fmt(n, hide) {
       if (hide && state.privacy) return '••••';
-      const v = Number(n) || 0;
-      return v.toLocaleString('ru-RU', { maximumFractionDigits: 0 });
+      return (Number(n)||0).toLocaleString('ru-RU', {maximumFractionDigits:0});
     }
 
     function money(n, hide) {
-      return formatMoney(n, hide) + (hide && state.privacy ? '' : ' ₽');
+      return fmt(n, hide) + (hide && state.privacy ? '' : ' ₽');
     }
 
-    function todayISO() {
-      return new Date().toISOString().slice(0, 10);
+    function today() {
+      return new Date().toISOString().slice(0,10);
     }
 
-    function startOfPeriod(period) {
+    function startOf(period) {
       const now = new Date();
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       if (period === 'week') {
         const day = (d.getDay() + 6) % 7;
         d.setDate(d.getDate() - day);
-      } else if (period === 'month') {
-        d.setDate(1);
-      } else if (period === 'year') {
-        d.setMonth(0, 1);
-      }
+      } else if (period === 'month') d.setDate(1);
+      else if (period === 'year') d.setMonth(0,1);
       return d;
     }
 
     function inPeriod(iso, period) {
       if (!iso) return false;
-      const d = new Date(iso + 'T00:00:00');
-      return d >= startOfPeriod(period);
+      return new Date(iso + 'T00:00:00') >= startOf(period);
     }
 
     function toast(msg) {
       const el = document.getElementById('toast');
       el.textContent = msg;
       el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2200);
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.classList.remove('show'), 2200);
     }
 
     function applyTheme() {
-      document.body.classList.toggle('dark-theme', state.dark);
-      document.getElementById('themeBtn').textContent = state.dark ? '☀️' : '🌙';
-      document.getElementById('themeSwitch').classList.toggle('on', state.dark);
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', state.dark ? '#000000' : '#f4f5f7');
+      document.body.classList.toggle('light', !state.dark);
+      document.getElementById('themeToggle').classList.toggle('on', state.dark);
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = state.dark ? '#0a0a0b' : '#f4f4f5';
     }
 
     function applyPrivacy() {
-      document.getElementById('privacyBtn').textContent = state.privacy ? '🙈' : '👁';
-      document.getElementById('privacySwitch').classList.toggle('on', state.privacy);
+      document.getElementById('privacyToggle').classList.toggle('on', state.privacy);
       renderHome();
       renderAnalytics();
       renderGoals();
     }
 
-    function fillCategories() {
-      const sel = document.getElementById('txCategory');
-      const list = CATS[state.txType] || CATS.expense;
-      sel.innerHTML = list.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
-    }
-
     function catById(id) {
-      for (const t of ['expense', 'income']) {
+      for (const t of ['expense','income']) {
         const f = CATS[t].find(c => c.id === id);
         if (f) return f;
       }
-      return { id, name: id, emoji: '📦' };
+      return {id, name: id, color: '#71717a'};
     }
 
-    function calcBalance() {
+    function fillCats() {
+      const sel = document.getElementById('txCategory');
+      const list = CATS[state.txType] || CATS.expense;
+      sel.innerHTML = list.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+
+    function calcMonth() {
       let income = 0, expense = 0;
-      const start = startOfPeriod('month');
       state.transactions.forEach(tx => {
         if (!inPeriod(tx.date, 'month')) return;
-        if (tx.type === 'income') income += Number(tx.amount) || 0;
-        else expense += Number(tx.amount) || 0;
+        if (tx.type === 'income') income += Number(tx.amount)||0;
+        else expense += Number(tx.amount)||0;
       });
-      return { income, expense, balance: income - expense };
+      return {income, expense, balance: income - expense};
     }
 
     function renderHome() {
-      const { income, expense, balance } = calcBalance();
+      const {income, expense, balance} = calcMonth();
       document.getElementById('balanceValue').textContent = money(balance, true);
       document.getElementById('incomeValue').textContent = money(income, true);
       document.getElementById('expenseValue').textContent = money(expense, true);
 
       const list = document.getElementById('txList');
-      const recent = [...state.transactions].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 8);
+      const recent = [...state.transactions]
+        .sort((a,b) => (b.date||'').localeCompare(a.date||''))
+        .slice(0, 10);
+
       if (!recent.length) {
-        list.innerHTML = '<div class="empty"><div class="emoji">📭</div>Пока нет операций</div>';
+        list.innerHTML = `<div class="empty"><div class="empty-icon">${svgIcon('empty')}</div><p>Пока нет операций</p></div>`;
         return;
       }
-      list.innerHTML = recent.map(tx => {
+
+      list.innerHTML = recent.map((tx, i) => {
         const cat = catById(tx.category);
         const sign = tx.type === 'income' ? '+' : '−';
-        return `<div class="tx-item" data-id="${tx.id}">
-          <div class="tx-icon">${cat.emoji}</div>
-          <div class="tx-info"><div class="name">${cat.name}${tx.note ? ' · ' + tx.note : ''}</div>
-          <div class="meta">${tx.date || ''}</div></div>
+        return `<div class="tx-item" data-id="${tx.id}" style="animation-delay:${i*0.04}s">
+          <div class="tx-icon" style="background:${cat.color}22;color:${cat.color}">${svgIcon(tx.category)}</div>
+          <div class="tx-info">
+            <div class="name">${cat.name}${tx.note ? ' · ' + tx.note : ''}</div>
+            <div class="meta">${tx.date || ''}</div>
+          </div>
           <div class="tx-amount ${tx.type}">${sign}${money(tx.amount, true)}</div>
         </div>`;
       }).join('');
@@ -561,45 +1083,45 @@
     function renderAnalytics() {
       const period = state.period;
       const txs = state.transactions.filter(tx => inPeriod(tx.date, period) && tx.type === 'expense');
-      const total = txs.reduce((s, t) => s + (Number(t.amount) || 0), 0);
+      const total = txs.reduce((s,t) => s + (Number(t.amount)||0), 0);
       document.getElementById('anExpenseTotal').textContent = money(total, true);
 
-      // simple bars by day of week / month
-      const bars = document.getElementById('chartBars');
       const groups = {};
       txs.forEach(tx => {
-        const key = (tx.date || '').slice(5); // MM-DD or similar
-        groups[key] = (groups[key] || 0) + (Number(tx.amount) || 0);
+        const key = (tx.date||'').slice(5) || '??';
+        groups[key] = (groups[key]||0) + (Number(tx.amount)||0);
       });
-      const entries = Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0])).slice(-7);
-      const max = Math.max(...entries.map(e => e[1]), 1);
-      bars.innerHTML = entries.length ? entries.map(([k, v]) => {
-        const h = Math.round((v / max) * 100);
-        return `<div class="chart-bar-wrap"><div class="chart-bar" style="height:${h}%"></div><div class="chart-bar-label">${k.slice(-2)}</div></div>`;
-      }).join('') : '<div class="empty" style="width:100%">Нет данных</div>';
+      const entries = Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).slice(-7);
+      const max = Math.max(...entries.map(e=>e[1]), 1);
+      const bars = document.getElementById('chartBars');
+      if (!entries.length) {
+        bars.innerHTML = `<div class="empty" style="width:100%;padding:20px 0"><p>Нет данных</p></div>`;
+      } else {
+        bars.innerHTML = entries.map(([k,v],i) => {
+          const h = Math.max(4, Math.round((v/max)*100));
+          return `<div class="bar-col">
+            <div class="bar" style="height:${h}%;animation-delay:${i*0.05}s"></div>
+            <div class="bar-label">${k.slice(-2)}</div>
+          </div>`;
+        }).join('');
+      }
 
-      // categories
       const byCat = {};
-      txs.forEach(tx => {
-        byCat[tx.category] = (byCat[tx.category] || 0) + (Number(tx.amount) || 0);
-      });
-      const catEntries = Object.entries(byCat).sort((a,b) => b[1] - a[1]);
+      txs.forEach(tx => { byCat[tx.category] = (byCat[tx.category]||0) + (Number(tx.amount)||0); });
+      const catEntries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
       const catList = document.getElementById('catList');
       if (!catEntries.length) {
-        catList.innerHTML = '<div class="empty">Нет расходов за период</div>';
+        catList.innerHTML = `<div class="empty"><p>Нет расходов за период</p></div>`;
         return;
       }
-      catList.innerHTML = catEntries.map(([id, sum], i) => {
+      catList.innerHTML = catEntries.map(([id,sum],i) => {
         const cat = catById(id);
-        const pct = Math.round((sum / total) * 100);
-        const color = COLORS[i % COLORS.length];
-        return `<div class="cat-item">
-          <span>${cat.emoji}</span>
-          <div style="flex:1">
-            <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600">
-              <span>${cat.name}</span><span>${money(sum, true)}</span>
-            </div>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        const pct = total ? Math.round((sum/total)*100) : 0;
+        return `<div class="cat-row" style="animation-delay:${i*0.04}s">
+          <div class="cat-icon" style="background:${cat.color}22;color:${cat.color}">${svgIcon(id,16)}</div>
+          <div class="cat-info">
+            <div class="top"><span>${cat.name}</span><span>${money(sum,true)}</span></div>
+            <div class="cat-bar-bg"><div class="cat-bar-fill" style="width:${pct}%;background:${cat.color}"></div></div>
           </div>
         </div>`;
       }).join('');
@@ -608,17 +1130,20 @@
     function renderGoals() {
       const list = document.getElementById('goalsList');
       if (!state.goals.length) {
-        list.innerHTML = '<div class="empty"><div class="emoji">🎯</div>Добавьте первую цель</div>';
+        list.innerHTML = `<div class="empty"><div class="empty-icon">${svgIcon('goal')}</div><p>Добавьте первую цель</p></div>`;
         return;
       }
-      list.innerHTML = state.goals.map(g => {
-        const pct = Math.min(100, Math.round(((Number(g.current) || 0) / (Number(g.target) || 1)) * 100));
-        return `<div class="goal-card" data-id="${g.id}">
-          <div class="goal-header">
-            <div class="goal-title">${g.icon || '🎯'} ${g.title}</div>
-            <span style="font-size:13px;color:var(--text-muted)">${pct}%</span>
+      list.innerHTML = state.goals.map((g,i) => {
+        const pct = Math.min(100, Math.round(((Number(g.current)||0)/(Number(g.target)||1))*100));
+        return `<div class="goal-card" data-id="${g.id}" style="animation-delay:${i*0.05}s">
+          <div class="goal-top">
+            <div class="goal-title">
+              <div class="goal-icon-wrap">${svgIcon('goal')}</div>
+              ${g.title}
+            </div>
+            <div class="goal-pct">${pct}%</div>
           </div>
-          <div class="goal-progress"><div class="goal-progress-fill" style="width:${pct}%"></div></div>
+          <div class="goal-progress"><div class="goal-fill" style="width:${pct}%"></div></div>
           <div class="goal-meta">
             <span>${money(g.current, true)}</span>
             <span>из ${money(g.target, true)}</span>
@@ -627,156 +1152,160 @@
       }).join('');
     }
 
-    function openTxModal(type, editId) {
+    function openTx(type, editId) {
       state.txType = type || 'expense';
       state.editTxId = editId || null;
       document.getElementById('txModalTitle').textContent = editId ? 'Редактировать' : 'Новая операция';
-      document.querySelectorAll('.type-tab').forEach(t => t.classList.toggle('active', t.dataset.type === state.txType));
-      fillCategories();
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === state.txType));
+      fillCats();
       document.getElementById('txAmount').value = '';
       document.getElementById('txNote').value = '';
-      document.getElementById('txDate').value = todayISO();
+      document.getElementById('txDate').value = today();
       if (editId) {
         const tx = state.transactions.find(t => t.id === editId);
         if (tx) {
           state.txType = tx.type;
-          document.querySelectorAll('.type-tab').forEach(t => t.classList.toggle('active', t.dataset.type === tx.type));
-          fillCategories();
+          document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === tx.type));
+          fillCats();
           document.getElementById('txAmount').value = tx.amount;
           document.getElementById('txCategory').value = tx.category;
           document.getElementById('txNote').value = tx.note || '';
-          document.getElementById('txDate').value = tx.date || todayISO();
+          document.getElementById('txDate').value = tx.date || today();
         }
       }
       document.getElementById('txModal').classList.add('open');
     }
 
-    function openGoalModal(editId) {
+    function openGoal(editId) {
       state.editGoalId = editId || null;
       document.getElementById('goalModalTitle').textContent = editId ? 'Редактировать цель' : 'Новая цель';
       document.getElementById('goalTitle').value = '';
       document.getElementById('goalTarget').value = '';
       document.getElementById('goalCurrent').value = '0';
-      document.getElementById('goalIcon').value = '✈️';
       if (editId) {
         const g = state.goals.find(x => x.id === editId);
         if (g) {
           document.getElementById('goalTitle').value = g.title || '';
           document.getElementById('goalTarget').value = g.target || '';
           document.getElementById('goalCurrent').value = g.current || 0;
-          document.getElementById('goalIcon').value = g.icon || '🎯';
         }
       }
       document.getElementById('goalModal').classList.add('open');
     }
 
     function bind() {
-      // Nav
       document.querySelectorAll('.nav-item').forEach(btn => {
         btn.addEventListener('click', () => {
-          const screen = btn.dataset.screen;
+          const s = btn.dataset.screen;
           document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-          document.getElementById('screen-' + screen).classList.add('active');
-          if (screen === 'analytics') renderAnalytics();
-          if (screen === 'goals') renderGoals();
+          document.querySelectorAll('.screen').forEach(sc => sc.classList.remove('active'));
+          const el = document.getElementById('screen-' + s);
+          el.classList.add('active');
+          void el.offsetWidth;
+          if (s === 'analytics') renderAnalytics();
+          if (s === 'goals') renderGoals();
         });
       });
 
-      document.getElementById('quickIncome').addEventListener('click', () => openTxModal('income'));
-      document.getElementById('quickExpense').addEventListener('click', () => openTxModal('expense'));
-      document.getElementById('txModalClose').addEventListener('click', () => document.getElementById('txModal').classList.remove('open'));
-      document.getElementById('goalModalClose').addEventListener('click', () => document.getElementById('goalModal').classList.remove('open'));
-      document.getElementById('addGoalBtn').addEventListener('click', () => openGoalModal());
+      document.getElementById('quickIncome').onclick = () => openTx('income');
+      document.getElementById('quickExpense').onclick = () => openTx('expense');
+      document.getElementById('txModalClose').onclick = () => document.getElementById('txModal').classList.remove('open');
+      document.getElementById('goalModalClose').onclick = () => document.getElementById('goalModal').classList.remove('open');
+      document.getElementById('addGoalBtn').onclick = () => openGoal();
 
-      document.querySelectorAll('.type-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          state.txType = tab.dataset.type;
-          document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          fillCategories();
-        });
+      document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.onclick = () => {
+          state.txType = btn.dataset.type;
+          document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          fillCats();
+        };
       });
 
-      document.getElementById('txSaveBtn').addEventListener('click', () => {
+      document.getElementById('txSaveBtn').onclick = () => {
         const amount = parseFloat(document.getElementById('txAmount').value);
         if (!amount || amount <= 0) { toast('Введите сумму'); return; }
         const category = document.getElementById('txCategory').value;
         const note = document.getElementById('txNote').value.trim();
-        const date = document.getElementById('txDate').value || todayISO();
+        const date = document.getElementById('txDate').value || today();
         if (state.editTxId) {
           const tx = state.transactions.find(t => t.id === state.editTxId);
-          if (tx) { tx.amount = amount; tx.category = category; tx.note = note; tx.date = date; tx.type = state.txType; }
+          if (tx) {
+            tx.amount = amount; tx.category = category; tx.note = note; tx.date = date; tx.type = state.txType;
+          }
         } else {
-          state.transactions.push({ id: uid(), type: state.txType, amount, category, note, date });
+          state.transactions.push({id: uid(), type: state.txType, amount, category, note, date});
         }
         save();
         document.getElementById('txModal').classList.remove('open');
         renderHome();
         renderAnalytics();
         toast('Сохранено');
-      });
+      };
 
-      document.getElementById('goalSaveBtn').addEventListener('click', () => {
+      document.getElementById('goalSaveBtn').onclick = () => {
         const title = document.getElementById('goalTitle').value.trim();
         const target = parseFloat(document.getElementById('goalTarget').value);
         const current = parseFloat(document.getElementById('goalCurrent').value) || 0;
-        const icon = document.getElementById('goalIcon').value.trim() || '🎯';
         if (!title || !target) { toast('Заполните название и цель'); return; }
         if (state.editGoalId) {
           const g = state.goals.find(x => x.id === state.editGoalId);
-          if (g) { g.title = title; g.target = target; g.current = current; g.icon = icon; }
+          if (g) { g.title = title; g.target = target; g.current = current; }
         } else {
-          state.goals.push({ id: uid(), title, target, current, icon });
+          state.goals.push({id: uid(), title, target, current});
         }
         save();
         document.getElementById('goalModal').classList.remove('open');
         renderGoals();
         toast('Цель сохранена');
-      });
+      };
 
-      document.getElementById('themeBtn').addEventListener('click', () => {
+      document.getElementById('themeBtn').onclick = () => {
         state.dark = !state.dark;
         save();
         applyTheme();
-      });
-      document.getElementById('themeSwitch').addEventListener('click', () => {
+      };
+      document.getElementById('themeToggle').onclick = () => {
         state.dark = !state.dark;
         save();
         applyTheme();
-      });
-      document.getElementById('privacyBtn').addEventListener('click', () => {
+      };
+      document.getElementById('privacyBtn').onclick = () => {
         state.privacy = !state.privacy;
         save();
         applyPrivacy();
-      });
-      document.getElementById('privacySwitch').addEventListener('click', () => {
+      };
+      document.getElementById('privacyToggle').onclick = () => {
         state.privacy = !state.privacy;
         save();
         applyPrivacy();
-      });
+      };
 
       document.querySelectorAll('.period-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.onclick = () => {
           state.period = tab.dataset.period;
           document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
           renderAnalytics();
-        });
+        };
       });
 
-      document.getElementById('exportBtn').addEventListener('click', () => {
-        const blob = new Blob([JSON.stringify({ transactions: state.transactions, goals: state.goals, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+      document.getElementById('exportBtn').onclick = () => {
+        const blob = new Blob([JSON.stringify({
+          transactions: state.transactions,
+          goals: state.goals,
+          exportedAt: new Date().toISOString()
+        }, null, 2)], {type:'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'finbalansika-export.json';
         a.click();
         URL.revokeObjectURL(a.href);
         toast('Экспорт готов');
-      });
+      };
 
-      document.getElementById('clearDataBtn').addEventListener('click', () => {
+      document.getElementById('clearDataBtn').onclick = () => {
         if (!confirm('Удалить все операции и цели?')) return;
         state.transactions = [];
         state.goals = [];
@@ -785,43 +1314,51 @@
         renderGoals();
         renderAnalytics();
         toast('Данные очищены');
-      });
+      };
 
-      // click on tx to edit (simple)
-      document.getElementById('txList').addEventListener('click', e => {
+      document.getElementById('txList').onclick = e => {
         const item = e.target.closest('.tx-item');
-        if (item) openTxModal(null, item.dataset.id);
-      });
-      document.getElementById('goalsList').addEventListener('click', e => {
+        if (item) openTx(null, item.dataset.id);
+      };
+      document.getElementById('goalsList').onclick = e => {
         const card = e.target.closest('.goal-card');
-        if (card) openGoalModal(card.dataset.id);
-      });
+        if (card) openGoal(card.dataset.id);
+      };
+
+      document.getElementById('txModal').onclick = e => {
+        if (e.target.id === 'txModal') e.target.classList.remove('open');
+      };
+      document.getElementById('goalModal').onclick = e => {
+        if (e.target.id === 'goalModal') e.target.classList.remove('open');
+      };
     }
 
-    function seedIfEmpty() {
+    function seed() {
       if (state.transactions.length) return;
-      const d = todayISO();
+      const d = today();
       state.transactions = [
-        { id: uid(), type: 'income', amount: 75000, category: 'salary', note: 'Аванс', date: d },
-        { id: uid(), type: 'expense', amount: 1200, category: 'food', note: 'Обед', date: d },
-        { id: uid(), type: 'expense', amount: 450, category: 'transport', note: '', date: d },
+        {id:uid(), type:'income', amount:85000, category:'salary', note:'Зарплата', date:d},
+        {id:uid(), type:'expense', amount:2400, category:'food', note:'Продукты', date:d},
+        {id:uid(), type:'expense', amount:890, category:'transport', note:'', date:d},
+        {id:uid(), type:'expense', amount:3500, category:'shop', note:'Одежда', date:d},
       ];
       state.goals = [
-        { id: uid(), title: 'Отпуск', target: 150000, current: 32000, icon: '✈️' },
+        {id:uid(), title:'Отпуск', target:180000, current:45000},
+        {id:uid(), title:'Новый ноутбук', target:120000, current:28000},
       ];
       save();
     }
 
     load();
-    seedIfEmpty();
+    seed();
     applyTheme();
     applyPrivacy();
     bind();
-    fillCategories();
+    fillCats();
     renderHome();
 
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+      navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
     }
   })();
   </script>
